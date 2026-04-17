@@ -130,6 +130,33 @@ http-server -p 8000
 3. 系统适合中小型数据量（几百条记录）
 4. Excel文件必须是.xlsx或.xls格式
 
+## GitHub部署指南
+
+### 1. 创建GitHub仓库
+
+1. 在GitHub上创建一个新的仓库（例如：`jifen-bubble`）
+2. 将本地代码推送到GitHub仓库：
+
+```bash
+git remote add origin https://github.com/你的用户名/jifen-bubble.git
+git branch -M main
+git push -u origin main
+```
+
+### 2. 启用GitHub Pages
+
+1. 进入GitHub仓库的Settings页面
+2. 在左侧菜单中找到"Pages"
+3. 在"Source"部分选择"GitHub Actions"
+4. 系统会自动使用`.github/workflows/deploy.yml`文件进行部署
+
+### 3. 访问在线版本
+
+部署完成后，可以通过以下URL访问：
+```
+https://你的用户名.github.io/jifen-bubble
+```
+
 ## 技术栈
 
 - HTML5 + CSS3 + JavaScript
@@ -137,3 +164,4 @@ http-server -p 8000
 - Chart.js - 图表库
 - SheetJS (xlsx.js) - Excel解析
 - localStorage - 本地存储
+- GitHub Pages - 静态网站部署
