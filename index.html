@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>积分可视化系统 - 数据上传</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- SheetJS (xlsx.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 页面头部 -->
+        <div class="page-header">
+            <div class="header-icon">📊</div>
+            <h1>积分可视化系统</h1>
+            <p>上传Excel文件开始您的数据分析之旅</p>
+        </div>
+        
+        <!-- 上传卡片 -->
+        <div class="upload-wrapper">
+            <div class="card upload-card">
+                <div class="card-body">
+                    <div class="upload-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    
+                    <h3 class="upload-title">上传Excel文件</h3>
+                    <p class="upload-subtitle">支持 .xlsx 和 .xls 格式</p>
+                    
+                    <div class="file-upload-area" id="drop-zone">
+                        <div class="upload-content">
+                            <svg class="upload-svg" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            <p class="drag-text">将Excel文件拖放到此处</p>
+                            <p class="or-text">或者</p>
+                            <label class="file-label">
+                                <input type="file" class="form-control" id="excel-file" accept=".xlsx, .xls">
+                                <span class="browse-btn">浏览文件</span>
+                            </label>
+                            <p class="file-name" id="file-name">未选择文件</p>
+                        </div>
+                    </div>
+                    
+                    <button id="upload-btn" class="btn btn-primary upload-btn">
+                        <span class="btn-text">开始解析</span>
+                    </button>
+                    
+                    <div id="upload-status" class="status-message"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 产品完成度展示 -->
+        <div id="completion-section" class="completion-section" style="display: none;">
+            <h4 class="completion-title">📊 产品完成度</h4>
+            <div class="completion-content" id="completion-content">
+                <!-- 产品完成度将在这里动态生成 -->
+            </div>
+        </div>
+        
+        <!-- 格式说明 -->
+        <div class="format-info">
+            <h4 class="format-title">📋 Excel格式说明</h4>
+            <div class="format-content">
+                <div class="format-row">
+                    <span class="format-label">第一列：</span>
+                    <span class="format-value">任务名称</span>
+                </div>
+                <div class="format-row">
+                    <span class="format-label">后面列：</span>
+                    <span class="format-value">产品/项目名称</span>
+                </div>
+                <div class="format-row">
+                    <span class="format-label">交叉单元格：</span>
+                    <span class="format-value">参与人员（用逗号、顿号或空格分隔）</span>
+                </div>
+                <div class="format-row">
+                    <span class="format-label">空格：</span>
+                    <span class="format-value">任务未完成</span>
+                </div>
+                <div class="format-row">
+                    <span class="format-label">\：</span>
+                    <span class="format-value">无此项任务</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript文件 -->
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/excel.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>

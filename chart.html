@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>积分可视化系统 - 数据展示</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ========= 立体气泡核心样式 ========= */
+        .bubble-particle {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #1f2d35;
+            font-family: "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+            font-weight: 600;
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1), 
+                        box-shadow 0.3s ease,
+                        filter 0.2s ease;
+            box-shadow: 0 12px 22px -8px rgba(0, 0, 0, 0.2),
+                        0 2px 4px rgba(0, 0, 0, 0.02),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(0px);
+            z-index: 10;
+            will-change: left, top, transform;
+            backface-visibility: hidden;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+            white-space: normal;
+            word-break: break-word;
+            padding: 0 10px;
+            line-height: 1.3;
+        }
+
+        .bubble-particle:hover {
+            transform: scale(1.1) !important;
+            box-shadow: 0 20px 32px -12px rgba(0, 0, 0, 0.3),
+                        0 4px 8px rgba(0, 0, 0, 0.05),
+                        inset 0 1px 1px rgba(255, 255, 255, 0.8);
+            filter: brightness(1.02) saturate(1.05);
+            z-index: 100 !important;
+        }
+
+        .clickable {
+            cursor: pointer;
+        }
+
+        .bg-dot {
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 50% !important;
+            aspect-ratio: 1 / 1 !important;
+            transition: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            background: radial-gradient(circle at 30% 35%, rgba(255,255,240,0.5), rgba(0,0,0,0.08));
+            text-shadow: none;
+            font-weight: normal;
+            white-space: nowrap;
+            padding: 0;
+        }
+        .bg-dot:hover {
+            transform: none !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+            filter: none;
+        }
+
+        /* 气泡图容器 */
+        .particle-garden {
+            width: 100%;
+            height: 800px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ed 100%);
+            cursor: default;
+            user-select: none;
+        }
+
+        .particle-canvas {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+    </style>
+</head>
+<body class="chart-page">
+    <!-- 页面头部导航 -->
+    <div class="chart-header">
+        <div class="header-left">
+            <a href="index.html" class="back-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                <span>返回上传</span>
+            </a>
+            <h1 class="chart-title">积分可视化</h1>
+        </div>
+        <div class="header-right">
+            <button id="reupload-btn" class="btn btn-outline-secondary reupload-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <polyline points="1 20 1 14 7 14"></polyline>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                </svg>
+                重新上传
+            </button>
+        </div>
+    </div>
+    
+    <!-- 数据统计卡片 -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-icon people-icon">👥</div>
+            <div class="stat-content">
+                <div class="stat-value" id="people-count">0</div>
+                <div class="stat-label">总人数</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon product-icon">📦</div>
+            <div class="stat-content">
+                <div class="stat-value" id="product-count">0</div>
+                <div class="stat-label">总产品</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon score-icon">⭐</div>
+            <div class="stat-content">
+                <div class="stat-value" id="total-score">0</div>
+                <div class="stat-label">总积分</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 视图切换和图表区域 -->
+    <div class="chart-main-container">
+        <div class="chart-controls">
+            <div class="view-toggle">
+                <button id="person-view" class="view-btn active">
+                    <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    按人员
+                </button>
+                <button id="product-view" class="view-btn">
+                    <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                    按产品
+                </button>
+            </div>
+        </div>
+        <div class="chart-fullscreen">
+            <div id="chart-container" class="chart-container" style="padding: 0; border-radius: 0;">
+                <div id="wp-particle-garden" class="particle-garden">
+                    <div id="particle-canvas" class="particle-canvas"></div>
+                </div>
+            </div>
+            <div id="chart-info" class="chart-info">
+                <div class="info-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <p>请先上传数据</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript文件 -->
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/charts.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>
