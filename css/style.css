@@ -5,7 +5,7 @@
 /* 全局样式 */
 body {
     font-family: 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
     min-height: 100vh;
     color: #333;
     line-height: 1.6;
@@ -102,7 +102,7 @@ body {
 .upload-icon {
     text-align: center;
     margin-bottom: 25px;
-    color: #667eea;
+    color: #3b82f6;
 }
 
 .upload-title {
@@ -133,14 +133,14 @@ body {
 }
 
 .file-upload-area:hover {
-    border-color: #667eea;
-    background: linear-gradient(135deg, #f0f4ff 0%, #e8edff 100%);
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
     transform: translateY(-2px);
 }
 
 .file-upload-area.dragover {
-    border-color: #667eea;
-    background: linear-gradient(135deg, #e0e7ff 0%, #d1dbff 100%);
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
     border-style: solid;
 }
 
@@ -152,7 +152,7 @@ body {
 }
 
 .upload-svg {
-    color: #667eea;
+    color: #3b82f6;
     opacity: 0.8;
 }
 
@@ -183,18 +183,18 @@ body {
 
 .browse-btn {
     display: inline-block;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     color: white;
     padding: 12px 30px;
     border-radius: 10px;
     font-weight: 600;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
 .browse-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }
 
 .file-name {
@@ -211,9 +211,9 @@ body {
 }
 
 .file-name.selected {
-    color: #667eea;
+    color: #3b82f6;
     font-weight: 600;
-    background: #f0f4ff;
+    background: #eff6ff;
 }
 
 /* 上传按钮 */
@@ -223,15 +223,15 @@ body {
     font-size: 1.15rem;
     font-weight: 700;
     border-radius: 12px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     border: none;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
     transition: all 0.3s ease;
 }
 
 .upload-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 12px 35px rgba(59, 130, 246, 0.5);
 }
 
 .upload-btn:active {
@@ -259,8 +259,8 @@ body {
 }
 
 .status-message.info {
-    color: #667eea;
-    background: #f0f4ff;
+    color: #3b82f6;
+    background: #eff6ff;
 }
 
 /* 格式说明 */
@@ -292,7 +292,7 @@ body {
     padding: 12px 15px;
     background: #f8f9fa;
     border-radius: 8px;
-    border-left: 4px solid #667eea;
+    border-left: 4px solid #3b82f6;
 }
 
 .format-label {
@@ -337,20 +337,20 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #667eea;
+    color: #3b82f6;
     text-decoration: none;
     font-weight: 600;
     padding: 12px 22px;
     border-radius: 14px;
-    background: #f8f9ff;
-    border: 2px solid #e8ebff;
+    background: #eff6ff;
+    border: 2px solid #dbeafe;
     transition: all 0.3s ease;
 }
 
 .back-btn:hover {
-    color: #5568d3;
-    background: #f0f4ff;
-    border-color: #d0d5ff;
+    color: #2563eb;
+    background: #dbeafe;
+    border-color: #bfdbfe;
     transform: translateX(-4px);
 }
 
@@ -380,16 +380,16 @@ body {
     font-weight: 600;
     padding: 12px 24px;
     border-radius: 14px;
-    border: 2px solid #e8ebff;
-    color: #667eea;
-    background: #f8f9ff;
+    border: 2px solid #dbeafe;
+    color: #3b82f6;
+    background: #eff6ff;
     transition: all 0.3s ease;
 }
 
 .reupload-btn:hover {
-    border-color: #d0d5ff;
-    color: #5568d3;
-    background: #f0f4ff;
+    border-color: #bfdbfe;
+    color: #2563eb;
+    background: #dbeafe;
     transform: translateY(-2px);
 }
 
@@ -433,15 +433,15 @@ body {
 }
 
 .people-icon {
-    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
 }
 
 .product-icon {
-    background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+    background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 100%);
 }
 
 .score-icon {
-    background: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%);
+    background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
 }
 
 .stat-content {
@@ -504,10 +504,10 @@ body {
 }
 
 .view-btn.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     color: white;
     border-color: transparent;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
 }
 
 .view-btn .btn-icon {
@@ -659,27 +659,27 @@ body {
 }
 
 .header-buttons .btn-outline-primary {
-    color: #667eea;
-    border: 2px solid #e8ebff;
-    background: #f8f9ff;
+    color: #3b82f6;
+    border: 2px solid #dbeafe;
+    background: #eff6ff;
 }
 
 .header-buttons .btn-outline-primary:hover {
-    color: #5568d3;
-    background: #f0f4ff;
-    border-color: #d0d5ff;
+    color: #2563eb;
+    background: #dbeafe;
+    border-color: #bfdbfe;
     transform: translateY(-2px);
 }
 
 .header-buttons .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     border: none;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
 .header-buttons .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }
 
 /* 详情信息卡片 */
@@ -693,10 +693,10 @@ body {
 }
 
 .detail-info-card .card-header {
-    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
     color: #1a1a1a;
     padding: 28px 35px;
-    border-bottom: 1px solid #e8ebff;
+    border-bottom: 1px solid #bfdbfe;
 }
 
 .detail-info-card .card-header h3 {
@@ -715,12 +715,12 @@ body {
     align-items: center;
     gap: 22px;
     padding: 24px 0;
-    border-bottom: 1px solid #f8f9ff;
+    border-bottom: 1px solid #eff6ff;
     transition: all 0.3s ease;
 }
 
 .stat-item:hover {
-    background: #fafbff;
+    background: #f0f7ff;
     margin: 0 -20px;
     padding: 24px 20px;
     border-radius: 14px;
@@ -737,10 +737,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
     border-radius: 18px;
-    border: 2px solid #e8ebff;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.08);
+    border: 2px solid #bfdbfe;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
 }
 
 .stat-item .stat-content {
@@ -750,7 +750,7 @@ body {
 .stat-item .stat-value {
     font-size: 2.4rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -766,7 +766,7 @@ body {
 }
 
 .detail-description {
-    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
     padding: 30px;
     border-radius: 20px;
     color: #374151;
@@ -776,7 +776,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border: 1px solid #e8ebff;
+    border: 1px solid #bfdbfe;
 }
 
 .detail-description p {
@@ -810,10 +810,10 @@ body {
 }
 
 .detail-bubble-card .card-header {
-    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
     color: #1a1a1a;
     padding: 28px 35px;
-    border-bottom: 1px solid #e8ebff;
+    border-bottom: 1px solid #bfdbfe;
 }
 
 .detail-bubble-card .card-header h3 {
@@ -832,10 +832,10 @@ body {
     position: relative;
     width: 100%;
     height: 500px;
-    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
     border-radius: 20px;
     padding: 25px;
-    border: 1px solid #e8ebff;
+    border: 1px solid #bfdbfe;
 }
 
 /* 图表卡片 */
@@ -849,10 +849,10 @@ body {
 }
 
 .detail-chart-card .card-header {
-    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
     color: #1a1a1a;
     padding: 28px 35px;
-    border-bottom: 1px solid #e8ebff;
+    border-bottom: 1px solid #bfdbfe;
 }
 
 .detail-chart-card .card-header h3 {
@@ -878,10 +878,10 @@ body {
 
 .chart-wrapper {
     height: 300px;
-    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
     border-radius: 20px;
     padding: 20px;
-    border: 1px solid #e8ebff;
+    border: 1px solid #bfdbfe;
 }
 
 /* 详情表格卡片 */
@@ -895,10 +895,10 @@ body {
 }
 
 .detail-table-card .card-header {
-    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
     color: #1a1a1a;
     padding: 28px 35px;
-    border-bottom: 1px solid #e8ebff;
+    border-bottom: 1px solid #bfdbfe;
 }
 
 .detail-table-card .card-header h3 {
@@ -923,7 +923,7 @@ body {
 }
 
 .table thead th {
-    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
     color: #1a1a1a;
     border: none;
     padding: 20px 24px;
@@ -931,7 +931,7 @@ body {
     font-size: 0.95rem;
     letter-spacing: 0.3px;
     position: relative;
-    border-bottom: 2px solid #e8ebff;
+    border-bottom: 2px solid #bfdbfe;
 }
 
 .table thead th:first-child {
@@ -954,15 +954,15 @@ body {
 }
 
 .table tbody tr:hover td {
-    background-color: #fafbff;
+    background-color: #f0f7ff;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background-color: #fafbff;
+    background-color: #f8faff;
 }
 
 .table-striped tbody tr:nth-of-type(odd):hover td {
-    background-color: #f5f7ff;
+    background-color: #e8f3ff;
 }
 
 .table tbody tr:last-child td:first-child {
@@ -1013,7 +1013,7 @@ body {
 
 /* 图表页面全屏布局 */
 .chart-page {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
     min-height: 100vh;
     padding: 0;
     margin: 0;
@@ -1076,7 +1076,7 @@ body {
 
 /* 详情页全屏布局 */
 .detail-page {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
     min-height: 100vh;
     padding: 0;
     margin: 0;
