@@ -3,6 +3,7 @@
  */
 
 let particleGarden = null;
+let scoreTooltip = null;
 
 class ParticleGarden {
     constructor() {
@@ -181,12 +182,17 @@ class ParticleGarden {
         data.forEach((item, idx) => {
             const div = document.createElement('div');
             div.className = 'bubble-particle clickable';
-            const minSize = 80;
-            const maxSize = 200;
+            // 响应式大小
+            const screenWidth = rect.width;
+            const minSize = Math.max(60, screenWidth * 0.08);
+            const maxSize = Math.min(200, screenWidth * 0.25);
             const size = minSize + (maxSize - minSize) * (item.totalScore / maxScore);
 
             let angle = (idx / data.length) * Math.PI * 2;
-            let radius = idx === 0 ? 0 : (idx <= 3 ? 150 : 280);
+            // 响应式半径
+            const baseRadius = Math.min(150, screenWidth * 0.2);
+            const outerRadius = Math.min(280, screenWidth * 0.35);
+            let radius = idx === 0 ? 0 : (idx <= 3 ? baseRadius : outerRadius);
             radius += (Math.random() - 0.5) * 45;
 
             let x = centerX + Math.cos(angle) * radius - size / 2;
@@ -209,9 +215,43 @@ class ParticleGarden {
             div.style.letterSpacing = '0.8px';
             div.style.textShadow = '0 1px 2px rgba(255,255,245,0.6)';
 
+            // 存储分数信息
+            div.dataset.score = item.totalScore;
+            
+            // 双击跳转
+            let clickCount = 0;
+            let clickTimer = null;
+            
             div.onclick = (e) => {
                 e.stopPropagation();
-                window.location.href = `detail.html?type=${type}&id=${encodeURIComponent(item.name)}`;
+                clickCount++;
+                
+                if (clickCount === 1) {
+                    // 单击显示分数
+                    showScoreTooltip(div, item.totalScore, e);
+                    
+                    clickTimer = setTimeout(() => {
+                        clickCount = 0;
+                    }, 300);
+                } else if (clickCount === 2) {
+                    // 双击跳转
+                    clearTimeout(clickTimer);
+                    clickCount = 0;
+                    window.location.href = `detail.html?type=${type}&id=${encodeURIComponent(item.name)}`;
+                }
+            };
+            
+            // 鼠标悬停显示分数
+            div.onmouseenter = (e) => {
+                showScoreTooltip(div, item.totalScore, e);
+            };
+            
+            div.onmousemove = (e) => {
+                updateTooltipPosition(e);
+            };
+            
+            div.onmouseleave = () => {
+                hideScoreTooltip();
             };
             this.canvas.appendChild(div);
 
@@ -392,4 +432,100 @@ function renderPersonDetailChart(person) {
 
 function renderTaskDistributionChart(person) {
     console.log('渲染任务分布图表');
+}
+
+/**
+ * 显示分数提示框
+ */
+function showScoreTooltip(element, score, event) {
+    // 移除已存在的提示框
+    hideScoreTooltip();
+    
+    // 创建新的提示框
+    scoreTooltip = document.createElement('div');
+    scoreTooltip.className = 'score-tooltip';
+    scoreTooltip.innerHTML = `
+        <div class="tooltip-content">
+            <span class="tooltip-label">积分</span>
+            <span class="tooltip-value">${score}</span>
+        </div>
+        <div class="tooltip-arrow"></div>
+    `;
+    
+    // 添加样式
+    scoreTooltip.style.position = 'fixed';
+    scoreTooltip.style.zIndex = '1000';
+    scoreTooltip.style.pointerEvents = 'none';
+    scoreTooltip.style.fontFamily = '"Microsoft YaHei", "Segoe UI", system-ui, sans-serif';
+    scoreTooltip.style.background = 'rgba(0, 0, 0, 0.8)';
+    scoreTooltip.style.color = 'white';
+    scoreTooltip.style.padding = '8px 12px';
+    scoreTooltip.style.borderRadius = '8px';
+    scoreTooltip.style.fontSize = '14px';
+    scoreTooltip.style.fontWeight = '600';
+    scoreTooltip.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+    
+    // 设置内容样式
+    const content = scoreTooltip.querySelector('.tooltip-content');
+    if (content) {
+        content.style.display = 'flex';
+        content.style.alignItems = 'center';
+        content.style.gap = '8px';
+    }
+    
+    const label = scoreTooltip.querySelector('.tooltip-label');
+    if (label) {
+        label.style.opacity = '0.8';
+        label.style.fontSize = '12px';
+    }
+    
+    const value = scoreTooltip.querySelector('.tooltip-value');
+    if (value) {
+        value.style.fontSize = '16px';
+        value.style.fontWeight = '700';
+        value.style.color = '#3b82f6';
+    }
+    
+    const arrow = scoreTooltip.querySelector('.tooltip-arrow');
+    if (arrow) {
+        arrow.style.position = 'absolute';
+        arrow.style.bottom = '-6px';
+        arrow.style.left = '50%';
+        arrow.style.transform = 'translateX(-50%)';
+        arrow.style.width = '0';
+        arrow.style.height = '0';
+        arrow.style.borderLeft = '6px solid transparent';
+        arrow.style.borderRight = '6px solid transparent';
+        arrow.style.borderTop = '6px solid rgba(0, 0, 0, 0.8)';
+    }
+    
+    // 添加到页面
+    document.body.appendChild(scoreTooltip);
+    
+    // 更新位置
+    updateTooltipPosition(event);
+}
+
+/**
+ * 更新提示框位置
+ */
+function updateTooltipPosition(event) {
+    if (!scoreTooltip) return;
+    
+    const rect = scoreTooltip.getBoundingClientRect();
+    const x = event.clientX - rect.width / 2;
+    const y = event.clientY - rect.height - 10;
+    
+    scoreTooltip.style.left = `${Math.max(0, x)}px`;
+    scoreTooltip.style.top = `${Math.max(0, y)}px`;
+}
+
+/**
+ * 隐藏分数提示框
+ */
+function hideScoreTooltip() {
+    if (scoreTooltip && scoreTooltip.parentNode) {
+        scoreTooltip.parentNode.removeChild(scoreTooltip);
+        scoreTooltip = null;
+    }
 }
