@@ -218,7 +218,10 @@ class ParticleGarden {
             // 存储分数信息
             div.dataset.score = item.totalScore;
             
-            // 双击跳转
+            // 检测是否为触摸屏
+            let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            
+            // 单击跳转（桌面端），单击显示分数（触摸屏）
             let clickCount = 0;
             let clickTimer = null;
             
@@ -227,14 +230,22 @@ class ParticleGarden {
                 clickCount++;
                 
                 if (clickCount === 1) {
-                    // 单击显示分数
+                    // 显示分数
                     showScoreTooltip(div, item.totalScore, e);
                     
-                    clickTimer = setTimeout(() => {
-                        clickCount = 0;
-                    }, 300);
-                } else if (clickCount === 2) {
-                    // 双击跳转
+                    if (isTouchDevice) {
+                        // 触摸屏：单击显示分数，双击跳转
+                        clickTimer = setTimeout(() => {
+                            clickCount = 0;
+                        }, 300);
+                    } else {
+                        // 桌面端：单击直接跳转
+                        setTimeout(() => {
+                            window.location.href = `detail.html?type=${type}&id=${encodeURIComponent(item.name)}`;
+                        }, 100);
+                    }
+                } else if (clickCount === 2 && isTouchDevice) {
+                    // 触摸屏双击跳转
                     clearTimeout(clickTimer);
                     clickCount = 0;
                     window.location.href = `detail.html?type=${type}&id=${encodeURIComponent(item.name)}`;
