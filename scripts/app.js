@@ -109,12 +109,7 @@ function initUploadPage() {
                     // 展示产品完成度
                     showProductCompletion(processedData.products);
                     
-                    showStatus(uploadStatus, '文件解析成功！正在跳转...', 'success');
-                    
-                    // 延迟跳转到图表页面
-                    setTimeout(() => {
-                        window.location.href = 'chart.html';
-                    }, 1500);
+                    showStatus(uploadStatus, '文件解析成功！请查看产品完成度', 'success');
                 } else {
                     throw new Error('保存数据失败');
                 }
@@ -124,6 +119,15 @@ function initUploadPage() {
                 showStatus(uploadStatus, '错误: ' + error.message, 'error');
             });
     });
+    
+    // 查看图表按钮事件
+    const viewChartBtn = document.getElementById('view-chart-btn');
+    if (viewChartBtn) {
+        viewChartBtn.addEventListener('click', function() {
+            console.log('查看图表按钮被点击');
+            window.location.href = 'chart.html';
+        });
+    }
 }
 
 /**
