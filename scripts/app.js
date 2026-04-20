@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', function() {
         initUploadPage();
     } else if (filename === 'chart.html') {
         initChartPage();
+    } else if (filename === 'completion.html') {
+        initCompletionPage();
     }
 });
 
@@ -106,10 +108,12 @@ function initUploadPage() {
                 
                 // 保存数据到本地存储
                 if (saveData(processedData)) {
-                    // 展示产品完成度
-                    showProductCompletion(processedData.products);
+                    showStatus(uploadStatus, '文件解析成功！正在跳转...', 'success');
                     
-                    showStatus(uploadStatus, '文件解析成功！请查看产品完成度', 'success');
+                    // 延迟跳转到产品完成度页面
+                    setTimeout(() => {
+                        window.location.href = 'completion.html';
+                    }, 1000);
                 } else {
                     throw new Error('保存数据失败');
                 }
@@ -119,15 +123,6 @@ function initUploadPage() {
                 showStatus(uploadStatus, '错误: ' + error.message, 'error');
             });
     });
-    
-    // 查看图表按钮事件
-    const viewChartBtn = document.getElementById('view-chart-btn');
-    if (viewChartBtn) {
-        viewChartBtn.addEventListener('click', function() {
-            console.log('查看图表按钮被点击');
-            window.location.href = 'chart.html';
-        });
-    }
 }
 
 /**
@@ -169,6 +164,14 @@ function initChartPage() {
     if (reuploadBtn) {
         reuploadBtn.addEventListener('click', function() {
             window.location.href = 'index.html';
+        });
+    }
+    
+    // 产品完成度按钮
+    const toCompletionBtn = document.getElementById('to-completion-btn');
+    if (toCompletionBtn) {
+        toCompletionBtn.addEventListener('click', function() {
+            window.location.href = 'completion.html';
         });
     }
     
@@ -277,10 +280,9 @@ function showStatus(element, message, type) {
  * 展示产品完成度
  */
 function showProductCompletion(products) {
-    const completionSection = document.getElementById('completion-section');
     const completionContent = document.getElementById('completion-content');
     
-    if (!completionSection || !completionContent) return;
+    if (!completionContent) return;
     
     // 清空内容
     completionContent.innerHTML = '';
@@ -308,9 +310,43 @@ function showProductCompletion(products) {
         
         completionContent.appendChild(productCard);
     });
+}
+
+/**
+ * 初始化产品完成度页面
+ */
+function initCompletionPage() {
+    console.log('初始化产品完成度页面');
     
-    // 显示完成度区域
-    completionSection.style.display = 'block';
+    // 检查是否有数据
+    if (!hasData()) {
+        console.log('没有数据，跳转到上传页面');
+        window.location.href = 'index.html';
+        return;
+    }
+    
+    // 加载数据
+    const data = loadData();
+    if (data && data.products) {
+        // 展示产品完成度
+        showProductCompletion(data.products);
+    }
+    
+    // 查看图表按钮
+    const toChartBtn = document.getElementById('to-chart-btn');
+    if (toChartBtn) {
+        toChartBtn.addEventListener('click', function() {
+            window.location.href = 'chart.html';
+        });
+    }
+    
+    // 重新上传按钮
+    const reuploadBtn = document.getElementById('reupload-btn');
+    if (reuploadBtn) {
+        reuploadBtn.addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
+    }
 }
 
 /**
