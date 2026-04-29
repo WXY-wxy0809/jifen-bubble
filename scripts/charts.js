@@ -24,8 +24,8 @@ class ParticleGarden {
         // 更丰富鲜艳的颜色池 - 明亮、高饱和度的五颜六色
         this.dotColors = [
             '#FF6B6B', '#FECB6E', '#4ECDC4', '#FF9FF3', '#A8E6CF', 
-            '#FF8A5C', '#019ce3ff', '#00CEC9', '#FFB8B8', '#1eb5dfff',
-            '#FFD93D', '#95E77E', '#FF9F43', '#54A0FF', '#9973e7ff',
+            '#FF8A5C', '#6C5CE7', '#00CEC9', '#FFB8B8', '#B8E4F0',
+            '#FFD93D', '#95E77E', '#FF9F43', '#54A0FF', '#5F27CD',
             '#FF6B8B', '#45B7D1', '#96CEB4', '#FECA57', '#00D2D3',
             '#E056A6', '#24A19C', '#F8D35C', '#6A89CC', '#F9A26C'
         ];
@@ -37,17 +37,132 @@ class ParticleGarden {
         return `radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.9), ${baseColor} 55%, ${baseColor} 100%)`;
     }
 
+    /**
+     * 计算最佳字体大小 - 确保文字不超出气泡
+     * @param {string} text 文字内容
+     * @param {number} bubbleSize 气泡大小(px)
+     * @returns {number} 计算后的字体大小(px)
+     */
     getOptimalFontSize(text, bubbleSize) {
-        if (!text || text.length === 0) return Math.max(14, bubbleSize / 5);
+        if (!text || text.length === 0) return Math.max(12, bubbleSize * 0.15);
+        
         const textLen = text.length;
-        if (textLen >= 8) {
-            let fontSize = Math.min(24, Math.max(14, bubbleSize * 0.24));
-            if (textLen > 12) fontSize = Math.max(12, fontSize * 0.9);
-            return fontSize;
+        // 气泡内边距（占气泡直径的比例）
+        const paddingRatio = 0.75;
+        const maxTextWidth = bubbleSize * paddingRatio;
+        
+        // 基础字体大小（按气泡比例）
+        let baseFontSize;
+        if (textLen <= 4) {
+            baseFontSize = bubbleSize * 0.28;
+        } else if (textLen <= 6) {
+            baseFontSize = bubbleSize * 0.24;
+        } else if (textLen <= 8) {
+            baseFontSize = bubbleSize * 0.2;
         } else {
-            let fontSize = Math.min(28, Math.max(14, bubbleSize * 0.22));
-            return fontSize;
+            baseFontSize = bubbleSize * 0.16;
         }
+        
+        // 根据实际字符宽度微调（中文字符近似等宽）
+        // 中文字符宽度约等于字体大小，英文约0.5倍
+        let estimatedWidth = 0;
+        for (let i = 0; i < text.length; i++) {
+            const code = text.charCodeAt(i);
+            // 中文字符范围
+            if ((code >= 0x4e00 && code <= 0x9fff) || (code >= 0x3400 && code <= 0x4dbf)) {
+                estimatedWidth += baseFontSize;
+            } else {
+                estimatedWidth += baseFontSize * 0.55;
+            }
+        }
+        
+        // 如果估算宽度超出最大宽度，缩小字体
+        let finalFontSize = baseFontSize;
+        if (estimatedWidth > maxTextWidth) {
+            finalFontSize = baseFontSize * (maxTextWidth / estimatedWidth);
+        }
+        
+        // 设置字体大小范围
+        finalFontSize = Math.max(11, Math.min(32, finalFontSize));
+        
+        return finalFontSize;
+    }
+
+    /**
+     * 处理长文本 - 添加换行或缩小字体
+     * @param {HTMLElement} element DOM元素
+     * @param {string} text 原始文本
+     * @param {number} bubbleSize 气泡大小
+     */
+    applyTextStyle(element, text, bubbleSize) {
+        const fontSize = this.getOptimalFontSize(text, bubbleSize);
+        element.style.fontSize = fontSize + 'px';
+        
+        // 根据字体大小和气泡大小决定是否换行
+        const textLength = text.length;
+        const maxCharsPerLine = Math.floor(bubbleSize / fontSize * 2.5);
+        
+        if (textLength > maxCharsPerLine && maxCharsPerLine >= 4) {
+            // 智能换行：在合适的位置插入换行
+            const words = text.split('');
+            const lines = [];
+            let currentLine = '';
+            
+            for (let i = 0; i < words.length; i++) {
+                const testLine = currentLine + words[i];
+                // 估算当前行的字符宽度
+                let lineWidth = 0;
+                for (let j = 0; j < testLine.length; j++) {
+                    const code = testLine.charCodeAt(j);
+                    if ((code >= 0x4e00 && code <= 0x9fff) || (code >= 0x3400 && code <= 0x4dbf)) {
+                        lineWidth += fontSize;
+                    } else {
+                        lineWidth += fontSize * 0.55;
+                    }
+                }
+                
+                if (lineWidth > bubbleSize * 0.7 && currentLine.length > 0) {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                } else {
+                    currentLine = testLine;
+                }
+            }
+            if (currentLine) {
+                lines.push(currentLine);
+            }
+            
+            if (lines.length > 1) {
+                element.innerText = lines.join('\n');
+                element.style.whiteSpace = 'pre-wrap';
+                element.style.lineHeight = '1.2';
+                element.style.display = 'flex';
+                element.style.alignItems = 'center';
+                element.style.justifyContent = 'center';
+                element.style.textAlign = 'center';
+                element.style.wordBreak = 'break-word';
+            } else {
+                element.innerText = text;
+                element.style.whiteSpace = 'nowrap';
+                element.style.textOverflow = 'ellipsis';
+                element.style.overflow = 'hidden';
+            }
+        } else {
+            element.innerText = text;
+            element.style.whiteSpace = 'nowrap';
+            element.style.textOverflow = 'ellipsis';
+            element.style.overflow = 'hidden';
+        }
+        
+        // 通用文本样式
+        element.style.fontWeight = '600';
+        element.style.letterSpacing = '0.5px';
+        element.style.textShadow = '0 1px 2px rgba(0,0,0,0.08)';
+        element.style.color = '#2d3748';
+        element.style.display = 'flex';
+        element.style.alignItems = 'center';
+        element.style.justifyContent = 'center';
+        element.style.textAlign = 'center';
     }
 
     getColorByName(name) {
@@ -192,7 +307,7 @@ class ParticleGarden {
         data.forEach((item, idx) => {
             const div = document.createElement('div');
             div.className = 'bubble-particle clickable';
-            // 气泡大小范围限制在 0-200 像素之间
+            // 气泡大小范围限制在 40-200 像素之间
             const minSize = Math.max(45, rect.width * 0.045);
             // 最大不超过200像素
             const maxSize = Math.min(200, rect.width * 0.28);
@@ -222,14 +337,18 @@ class ParticleGarden {
             div.style.background = this.generateSphereGradient(baseColor);
             div.style.left = x + 'px';
             div.style.top = y + 'px';
-
-            const optimalFontSize = this.getOptimalFontSize(item.name, size);
-            div.style.fontSize = optimalFontSize + 'px';
-            div.innerText = item.name;
-            div.style.fontWeight = '600';
-            div.style.letterSpacing = '0.8px';
-            div.style.textShadow = '0 1px 2px rgba(0,0,0,0.1)';
-            div.style.color = '#2d3748'; // 深灰色文字，保证在任何亮色背景上可读
+            
+            // 文本容器包装，确保文字居中且不溢出
+            div.style.display = 'flex';
+            div.style.alignItems = 'center';
+            div.style.justifyContent = 'center';
+            div.style.textAlign = 'center';
+            div.style.wordBreak = 'break-word';
+            div.style.boxSizing = 'border-box';
+            div.style.padding = '4px';
+            
+            // 应用优化的文本样式
+            this.applyTextStyle(div, item.name, size);
 
             // 存储分数信息
             div.dataset.score = item.totalScore;
