@@ -182,11 +182,13 @@ class ParticleGarden {
         data.forEach((item, idx) => {
             const div = document.createElement('div');
             div.className = 'bubble-particle clickable';
-            // 响应式大小
+            // 响应式大小 - 使用非线性比例让大小差异更明显
             const screenWidth = rect.width;
-            const minSize = Math.max(60, screenWidth * 0.08);
-            const maxSize = Math.min(200, screenWidth * 0.25);
-            const size = minSize + (maxSize - minSize) * (item.totalScore / maxScore);
+            const minSize = Math.max(50, screenWidth * 0.06);
+            const maxSize = Math.min(280, screenWidth * 0.35);
+            // 使用平方比例让高分更大，低分更小
+            const scoreRatio = item.totalScore / maxScore;
+            const size = minSize + (maxSize - minSize) * Math.pow(scoreRatio, 0.6);
 
             let angle = (idx / data.length) * Math.PI * 2;
             // 响应式半径
