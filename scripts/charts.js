@@ -21,7 +21,7 @@ class ParticleGarden {
         this.MAX_DT = 0.025;
         this.MAIN_SPEED_RANGE = 38;
         this.BG_SPEED_RANGE = 55;
-        this.dotColors = ['#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA', '#F8C8DC', '#D4A5A5', '#92C9B1', '#FFDFD3', '#E0BBE4'];
+        this.dotColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57', '#FF9FF3', '#54A0FF', '#5F27CD', '#00D2D3', '#FF9F43'];
         this.bgDotsCount = 120;
     }
 
@@ -44,12 +44,12 @@ class ParticleGarden {
     }
 
     getColorByName(name) {
-        // 马卡龙色系颜色方案
+        // 饱和度适中的马卡龙色系颜色方案
         const colorPalette = [
-            '#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA',
-            '#F8C8DC', '#D4A5A5', '#92C9B1', '#FFDFD3', '#E0BBE4',
-            '#DCD0FF', '#FFD1DC', '#B5D8EB', '#D0F0C0', '#F8DE7E',
-            '#FFCEF3', '#C9E4CA', '#FFE5B4', '#D4E6F1', '#E8DAEF'
+            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57',
+            '#FF9FF3', '#54A0FF', '#5F27CD', '#00D2D3', '#FF9F43',
+            '#A3CB38', '#1289A7', '#D980FA', '#B53471', '#EE5A24',
+            '#C4E538', '#12CBC4', '#FDA7DF', '#ED4C67', '#0652DD'
         ];
         
         let hash = 0;
