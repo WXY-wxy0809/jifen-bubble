@@ -24,8 +24,8 @@ class ParticleGarden {
         // 更丰富鲜艳的颜色池 - 明亮、高饱和度的五颜六色
         this.dotColors = [
             '#FF6B6B', '#FECB6E', '#4ECDC4', '#FF9FF3', '#A8E6CF', 
-            '#FF8A5C', '#6C5CE7', '#00CEC9', '#FFB8B8', '#B8E4F0',
-            '#FFD93D', '#95E77E', '#FF9F43', '#54A0FF', '#5F27CD',
+            '#FF8A5C', '#019ce3ff', '#00CEC9', '#FFB8B8', '#1eb5dfff',
+            '#FFD93D', '#95E77E', '#FF9F43', '#54A0FF', '#9973e7ff',
             '#FF6B8B', '#45B7D1', '#96CEB4', '#FECA57', '#00D2D3',
             '#E056A6', '#24A19C', '#F8D35C', '#6A89CC', '#F9A26C'
         ];
