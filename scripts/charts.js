@@ -38,10 +38,10 @@ class ParticleGarden {
     }
 
     /**
-     * 计算最佳字体大小 - 优先使用较大字体，通过换行适应气泡
+     * 计算最佳字体大小 - 横向排布，字体大小与气泡大小一致
      * @param {string} text 文字内容
      * @param {number} bubbleSize 气泡大小(px)
-     * @returns {Object} 包含字体大小和换行策略的对象
+     * @returns {Object} 包含字体大小的对象
      */
     calculateOptimalTextStyle(text, bubbleSize) {
         if (!text || text.length === 0) {
@@ -49,71 +49,58 @@ class ParticleGarden {
         }
         
         const textLen = text.length;
-        // 目标：让文字尽可能大，通过换行来适应气泡
-        // 根据文字长度估算最佳行数
-        let targetLines = 1;
+        const maxWidth = bubbleSize * 0.85; // 文字区域占气泡85%宽度
+        const maxHeight = bubbleSize * 0.7; // 文字区域占气泡70%高度
         
-        if (textLen <= 4) {
-            targetLines = 1;
-        } else if (textLen <= 12) {
-            targetLines = 2;
+        // 优先考虑横向排布，单行显示
+        // 根据气泡大小计算基础字体大小
+        let fontSize = Math.floor(bubbleSize * 0.22);
+        
+        // 根据文字长度调整字体大小
+        if (textLen <= 2) {
+            fontSize = Math.floor(bubbleSize * 0.35);
+        } else if (textLen <= 4) {
+            fontSize = Math.floor(bubbleSize * 0.28);
+        } else if (textLen <= 6) {
+            fontSize = Math.floor(bubbleSize * 0.22);
+        } else if (textLen <= 8) {
+            fontSize = Math.floor(bubbleSize * 0.18);
+        } else if (textLen <= 10) {
+            fontSize = Math.floor(bubbleSize * 0.15);
         } else {
-            targetLines = Math.min(3, Math.ceil(textLen / 6));
+            fontSize = Math.floor(bubbleSize * 0.12);
         }
         
-        // 根据行数计算字体大小（每行高度约为字体大小的1.2倍）
-        const maxHeight = bubbleSize * 0.8; // 文字区域占气泡的80%高度
-        const lineHeightRatio = 1.2;
-        let fontSize = Math.floor(maxHeight / (targetLines * lineHeightRatio));
+        // 验证宽度是否足够
+        const avgCharWidth = fontSize * 0.9;
+        const requiredWidth = textLen * avgCharWidth;
         
-        // 同时考虑宽度限制（每行最多显示字符数）
-        const maxWidth = bubbleSize * 0.85; // 文字区域占气泡85%宽度
-        // 中文字符宽度约等于字体大小，英文约0.5倍
-        const avgCharWidth = fontSize * 0.8;
-        const maxCharsPerLine = Math.floor(maxWidth / avgCharWidth);
+        // 如果宽度不够，继续缩小字体
+        if (requiredWidth > maxWidth) {
+            fontSize = Math.floor(maxWidth / (textLen * 0.9));
+        }
         
-        // 如果每行字符数不够，增加行数
-        let needsWrap = true;
-        let actualLines = targetLines;
-        let wrapSegments = [];
-        
-        if (textLen <= maxCharsPerLine) {
-            // 一行就能显示完，使用大字体
-            needsWrap = false;
-            fontSize = Math.min(32, Math.floor(maxHeight / lineHeightRatio));
-            actualLines = 1;
-        } else {
-            // 需要多行，计算每行放多少字
-            const charsPerLine = Math.min(maxCharsPerLine, Math.ceil(textLen / targetLines));
-            // 重新计算行数
-            actualLines = Math.ceil(textLen / charsPerLine);
-            actualLines = Math.min(actualLines, 4); // 最多4行
-            
-            // 重新计算字体大小
-            fontSize = Math.floor(maxHeight / (actualLines * lineHeightRatio));
-            
-            // 生成换行位置
-            for (let i = 0; i < actualLines; i++) {
-                const start = i * charsPerLine;
-                const end = Math.min(start + charsPerLine, textLen);
-                wrapSegments.push(text.substring(start, end));
-            }
+        // 验证高度是否足够
+        if (fontSize > maxHeight) {
+            fontSize = Math.floor(maxHeight);
         }
         
         // 字体大小范围限制
-        fontSize = Math.max(12, Math.min(36, fontSize));
+        fontSize = Math.max(10, Math.min(40, fontSize));
+        
+        const lineHeightRatio = 1.2;
         
         return {
             fontSize: fontSize,
-            lines: actualLines,
-            needsWrap: needsWrap,
-            wrapSegments: wrapSegments,
+            lines: 1,
+            needsWrap: false,
+            wrapSegments: [],
             lineHeight: fontSize * lineHeightRatio
         };
     }
 
     /**
-     * 应用文本样式到气泡
+     * 应用文本样式到气泡 - 横向排布
      * @param {HTMLElement} element DOM元素
      * @param {string} text 原始文本
      * @param {number} bubbleSize 气泡大小
@@ -125,33 +112,25 @@ class ParticleGarden {
         element.style.fontSize = style.fontSize + 'px';
         element.style.lineHeight = style.lineHeight + 'px';
         
-        // 根据计算结果显示文字
-        if (style.needsWrap && style.lines > 1) {
-            // 使用换行显示
-            element.innerText = style.wrapSegments.join('\n');
-            element.style.whiteSpace = 'pre-wrap';
-            element.style.wordBreak = 'break-word';
-        } else {
-            // 单行显示，使用省略号处理超长情况（但通常不会发生）
-            element.innerText = text;
-            element.style.whiteSpace = 'nowrap';
-            element.style.textOverflow = 'ellipsis';
-            element.style.overflow = 'hidden';
-        }
+        // 始终横向显示，单行显示
+        element.innerText = text;
+        element.style.whiteSpace = 'nowrap';
+        element.style.overflow = 'visible'; // 允许文字溢出（但通过字体大小计算应该不会溢出）
         
         // 通用文本样式
         element.style.fontWeight = '600';
-        element.style.letterSpacing = '0.5px';
-        element.style.textShadow = '0 1px 2px rgba(0,0,0,0.08)';
+        element.style.letterSpacing = '0.3px';
+        element.style.textShadow = '0 1px 2px rgba(0,0,0,0.1)';
         element.style.color = '#2d3748';
         element.style.display = 'flex';
         element.style.alignItems = 'center';
         element.style.justifyContent = 'center';
         element.style.textAlign = 'center';
+        element.style.flexDirection = 'row'; // 确保横向排布
         
-        // 存储换行信息用于调试
+        // 存储字体大小信息用于调试
         element.dataset.fontSize = style.fontSize;
-        element.dataset.lines = style.lines;
+        element.dataset.lines = 1;
     }
 
     getColorByName(name) {
@@ -333,9 +312,10 @@ class ParticleGarden {
             div.style.justifyContent = 'center';
             div.style.textAlign = 'center';
             div.style.boxSizing = 'border-box';
-            div.style.padding = '8px 6px';
+            div.style.padding = '4px'; // 减小padding让文字有更多空间
             div.style.borderRadius = '50%';
-            div.style.overflow = 'hidden';
+            div.style.overflow = 'visible';
+            div.style.flexDirection = 'row';
             
             // 应用优化的文本样式
             this.applyTextStyle(div, item.name, size);
