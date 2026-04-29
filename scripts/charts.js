@@ -55,8 +55,6 @@ class ParticleGarden {
         
         if (textLen <= 4) {
             targetLines = 1;
-        } else if (textLen <= 8) {
-            targetLines = 2;
         } else if (textLen <= 12) {
             targetLines = 2;
         } else {
