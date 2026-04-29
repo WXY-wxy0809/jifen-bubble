@@ -21,35 +21,44 @@ class ParticleGarden {
         this.MAX_DT = 0.025;
         this.MAIN_SPEED_RANGE = 38;
         this.BG_SPEED_RANGE = 55;
-        this.dotColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57', '#FF9FF3', '#54A0FF', '#5F27CD', '#00D2D3', '#FF9F43'];
+        // 更丰富鲜艳的颜色池 - 明亮、高饱和度的五颜六色
+        this.dotColors = [
+            '#FF6B6B', '#FECB6E', '#4ECDC4', '#FF9FF3', '#A8E6CF', 
+            '#FF8A5C', '#6C5CE7', '#00CEC9', '#FFB8B8', '#B8E4F0',
+            '#FFD93D', '#95E77E', '#FF9F43', '#54A0FF', '#5F27CD',
+            '#FF6B8B', '#45B7D1', '#96CEB4', '#FECA57', '#00D2D3',
+            '#E056A6', '#24A19C', '#F8D35C', '#6A89CC', '#F9A26C'
+        ];
         this.bgDotsCount = 120;
     }
 
     generateSphereGradient(baseColor) {
-        // 柔和的马卡龙渐变，减少金属感
-        return `radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.75), ${baseColor} 60%, ${baseColor} 100%)`;
+        // 明亮清新的渐变效果，减少暗色调
+        return `radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.9), ${baseColor} 55%, ${baseColor} 100%)`;
     }
 
     getOptimalFontSize(text, bubbleSize) {
         if (!text || text.length === 0) return Math.max(14, bubbleSize / 5);
         const textLen = text.length;
         if (textLen >= 8) {
-            let fontSize = Math.min(26, Math.max(16, bubbleSize * 0.22));
-            if (textLen > 12) fontSize = Math.max(14, fontSize * 0.9);
+            let fontSize = Math.min(24, Math.max(14, bubbleSize * 0.24));
+            if (textLen > 12) fontSize = Math.max(12, fontSize * 0.9);
             return fontSize;
         } else {
-            let fontSize = Math.min(32, Math.max(14, bubbleSize * 0.2));
+            let fontSize = Math.min(28, Math.max(14, bubbleSize * 0.22));
             return fontSize;
         }
     }
 
     getColorByName(name) {
-        // 饱和度适中的马卡龙色系颜色方案
+        // 明亮鲜艳的颜色池 - 马卡龙色系 + 糖果色系，避免暗色
         const colorPalette = [
-            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57',
-            '#FF9FF3', '#54A0FF', '#5F27CD', '#00D2D3', '#FF9F43',
-            '#A3CB38', '#1289A7', '#D980FA', '#B53471', '#EE5A24',
-            '#C4E538', '#12CBC4', '#FDA7DF', '#ED4C67', '#0652DD'
+            '#FF6B6B', '#FECB6E', '#4ECDC4', '#FF9FF3', '#A8E6CF',
+            '#FF8A5C', '#6C5CE7', '#00CEC9', '#FFB8B8', '#B8E4F0',
+            '#FFD93D', '#95E77E', '#FF9F43', '#54A0FF', '#5F27CD',
+            '#FF6B8B', '#45B7D1', '#96CEB4', '#FECA57', '#00D2D3',
+            '#E056A6', '#24A19C', '#F8D35C', '#6A89CC', '#F9A26C',
+            '#78E08F', '#82CCDD', '#FDA7DF', '#D980FA', '#E1B12C'
         ];
         
         let hash = 0;
@@ -183,18 +192,21 @@ class ParticleGarden {
         data.forEach((item, idx) => {
             const div = document.createElement('div');
             div.className = 'bubble-particle clickable';
-            // 响应式大小 - 使用非线性比例让大小差异更明显
-            const screenWidth = rect.width;
-            const minSize = Math.max(50, screenWidth * 0.06);
-            const maxSize = Math.min(280, screenWidth * 0.35);
+            // 气泡大小范围限制在 0-200 像素之间
+            const minSize = Math.max(45, rect.width * 0.045);
+            // 最大不超过200像素
+            const maxSize = Math.min(200, rect.width * 0.28);
             // 使用平方比例让高分更大，低分更小
             const scoreRatio = item.totalScore / maxScore;
-            const size = minSize + (maxSize - minSize) * Math.pow(scoreRatio, 0.6);
+            // 确保size不超过200
+            let size = minSize + (maxSize - minSize) * Math.pow(scoreRatio, 0.6);
+            size = Math.min(size, 200);
+            size = Math.max(size, 40); // 最小不低于40像素保证可读性
 
             let angle = (idx / data.length) * Math.PI * 2;
             // 响应式半径
-            const baseRadius = Math.min(150, screenWidth * 0.2);
-            const outerRadius = Math.min(280, screenWidth * 0.35);
+            const baseRadius = Math.min(140, rect.width * 0.18);
+            const outerRadius = Math.min(260, rect.width * 0.32);
             let radius = idx === 0 ? 0 : (idx <= 3 ? baseRadius : outerRadius);
             radius += (Math.random() - 0.5) * 45;
 
@@ -216,7 +228,8 @@ class ParticleGarden {
             div.innerText = item.name;
             div.style.fontWeight = '600';
             div.style.letterSpacing = '0.8px';
-            div.style.textShadow = '0 1px 2px rgba(255,255,245,0.6)';
+            div.style.textShadow = '0 1px 2px rgba(0,0,0,0.1)';
+            div.style.color = '#2d3748'; // 深灰色文字，保证在任何亮色背景上可读
 
             // 存储分数信息
             div.dataset.score = item.totalScore;
@@ -298,8 +311,8 @@ class ParticleGarden {
             div.style.width = size + 'px';
             div.style.height = size + 'px';
             const dotColor = this.dotColors[Math.floor(Math.random() * this.dotColors.length)];
-            div.style.background = `radial-gradient(circle at 35% 35%, rgba(255,255,240,0.7), ${dotColor} 70%, rgba(0,0,0,0.1))`;
-            div.style.opacity = Math.random() * 0.55 + 0.25;
+            div.style.background = `radial-gradient(circle at 35% 35%, rgba(255,255,245,0.9), ${dotColor} 70%, rgba(255,255,240,0.6))`;
+            div.style.opacity = Math.random() * 0.55 + 0.3;
             div.style.left = x + 'px';
             div.style.top = y + 'px';
             div.innerText = '';
