@@ -21,12 +21,13 @@ class ParticleGarden {
         this.MAX_DT = 0.025;
         this.MAIN_SPEED_RANGE = 38;
         this.BG_SPEED_RANGE = 55;
-        this.dotColors = ['#f44336', '#9c27b0', '#2196f3', '#4caf50', '#ffeb3b', '#ff9800', '#00bcd4', '#e91e63', '#ff6d00', '#3f51b5'];
+        this.dotColors = ['#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA', '#F8C8DC', '#D4A5A5', '#92C9B1', '#FFDFD3', '#E0BBE4'];
         this.bgDotsCount = 120;
     }
 
     generateSphereGradient(baseColor) {
-        return `radial-gradient(circle at 28% 30%, rgba(255, 255, 245, 0.85), ${baseColor} 55%, rgba(0, 0, 0, 0.18) 98%)`;
+        // 柔和的马卡龙渐变，减少金属感
+        return `radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.75), ${baseColor} 60%, ${baseColor} 100%)`;
     }
 
     getOptimalFontSize(text, bubbleSize) {
@@ -43,12 +44,12 @@ class ParticleGarden {
     }
 
     getColorByName(name) {
-        // 使用更美观的颜色方案
+        // 马卡龙色系颜色方案
         const colorPalette = [
-            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57',
-            '#FF9FF3', '#54A0FF', '#5F27CD', '#00D2D3', '#FF9F43',
-            '#A3CB38', '#1289A7', '#D980FA', '#B53471', '#EE5A24',
-            '#C4E538', '#12CBC4', '#FDA7DF', '#ED4C67', '#0652DD'
+            '#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA',
+            '#F8C8DC', '#D4A5A5', '#92C9B1', '#FFDFD3', '#E0BBE4',
+            '#DCD0FF', '#FFD1DC', '#B5D8EB', '#D0F0C0', '#F8DE7E',
+            '#FFCEF3', '#C9E4CA', '#FFE5B4', '#D4E6F1', '#E8DAEF'
         ];
         
         let hash = 0;
